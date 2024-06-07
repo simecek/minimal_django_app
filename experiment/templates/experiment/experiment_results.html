@@ -1,0 +1,42 @@
+<!-- experiment/templates/experiment/experiment_results.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experiment Results</title>
+</head>
+<body>
+    <h1>Experiment Results</h1>
+    <form method="get">
+        {{ form.as_p }}
+        <button type="submit">Filter</button>
+    </form>
+    <p>Total Results: {{ total_results }}</p>
+    <p>Displayed Results: {{ displayed_results }}</p>
+    <table border="1">
+        <tr>
+            <th>Protein Name</th>
+            <th>Protein Link</th>
+            <th>Chromosome</th>
+            <th>Start</th>
+            <th>Stop</th>
+            <th>Strand</th>
+            <th>Score</th>
+            <th>Notes</th>
+        </tr>
+        {% for result in results %}
+        <tr>
+            <td>{{ result.ProteinName }}</td>
+            <td><a href="{{ result.ProteinLink }}">{{ result.ProteinLink }}</a></td>
+            <td>{{ result.Chromosome }}</td>
+            <td>{{ result.Start }}</td>
+            <td>{{ result.Stop }}</td>
+            <td>{{ result.Strand }}</td>
+            <td>{{ result.Score }}</td>
+            <td>{{ result.Notes }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+
