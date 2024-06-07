@@ -4,39 +4,76 @@
 <html>
 <head>
     <title>Experiment Results</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Experiment Results</h1>
-    <form method="get">
-        {{ form.as_p }}
-        <button type="submit">Filter</button>
-    </form>
-    <p>Total Results: {{ total_results }}</p>
-    <p>Displayed Results: {{ displayed_results }}</p>
-    <table border="1">
-        <tr>
-            <th>Protein Name</th>
-            <th>Protein Link</th>
-            <th>Chromosome</th>
-            <th>Start</th>
-            <th>Stop</th>
-            <th>Strand</th>
-            <th>Score</th>
-            <th>Notes</th>
-        </tr>
-        {% for result in results %}
-        <tr>
-            <td>{{ result.ProteinName }}</td>
-            <td><a href="{{ result.ProteinLink }}">{{ result.ProteinLink }}</a></td>
-            <td>{{ result.Chromosome }}</td>
-            <td>{{ result.Start }}</td>
-            <td>{{ result.Stop }}</td>
-            <td>{{ result.Strand }}</td>
-            <td>{{ result.Score }}</td>
-            <td>{{ result.Notes }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="container mt-4">
+        <h1 class="mb-4">Experiment Results</h1>
+        <form method="get" class="mb-4">
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+        <p>Total Results: {{ total_results }}</p>
+        <p>Displayed Results: {{ displayed_results }}</p>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Protein Name</th>
+                    <th>Protein Link</th>
+                    <th>Chromosome</th>
+                    <th>Start</th>
+                    <th>Stop</th>
+                    <th>Strand</th>
+                    <th>Score</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td>{{ result.ProteinName }}</td>
+                    <td><a href="{{ result.ProteinLink }}">{{ result.ProteinLink }}</a></td>
+                    <td>{{ result.Chromosome }}</td>
+                    <td>{{ result.Start }}</td>
+                    <td>{{ result.Stop }}</td>
+                    <td>{{ result.Strand }}</td>
+                    <td>{{ result.Score }}</td>
+                    <td>{{ result.Notes }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                {% if results.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if form %}{{ request.GET.urlencode }}&{% endif %}page=1">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?{% if form %}{{ request.GET.urlencode }}&{% endif %}page={{ results.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+                {% for num in results.paginator.page_range %}
+                {% if results.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% elif num > results.number|add:'-5' and num < results.number|add:'5' %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if form %}{{ request.GET.urlencode }}&{% endif %}page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+                {% if results.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if form %}{{ request.GET.urlencode }}&{% endif %}page={{ results.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?{% if form %}{{ request.GET.urlencode }}&{% endif %}page={{ results.paginator.num_pages }}">Last</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
 </body>
 </html>
-
