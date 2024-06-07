@@ -20,7 +20,7 @@ def experiment_results(request):
         if protein_name:
             results = results.filter(ProteinName__icontains=protein_name)
         if chromosome:
-            results = results.filter(Chromosome__icontains=chromosome)
+            results = results.filter(Chromosome__iexact=chromosome)
         if start is not None:
             results = results.filter(Start__gte=start)
         if stop is not None:
@@ -37,4 +37,3 @@ def experiment_results(request):
         'displayed_results': len(page_obj),
     }
     return render(request, 'experiment/experiment_results.html', context)
-
